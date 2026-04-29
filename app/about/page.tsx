@@ -15,7 +15,7 @@ export default function AboutPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center animate-fade-in-up">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance">
-                About Premium Dogs
+                About Little Kennel
               </h1>
               <p className="text-lg sm:text-xl text-foreground/80 max-w-3xl mx-auto">
                 Dedicated to providing premium quality dogs with comprehensive health care, medication, and support for a lifetime of companionship.
@@ -249,7 +249,7 @@ export default function AboutPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 animate-fade-in-up">
               <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-                Why Choose Premium Dogs?
+                Why Choose Little Kennel?
               </h2>
             </div>
 

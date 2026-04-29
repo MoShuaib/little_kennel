@@ -18,7 +18,7 @@ export function Navbar() {
               <span className="text-primary-foreground font-bold text-lg">🐕</span>
             </div>
             <span className="font-bold text-lg text-foreground hidden sm:inline">
-              Premium Dogs
+              Little Kennel
             </span>
           </Link>
  
