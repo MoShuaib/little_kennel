@@ -21,7 +21,7 @@ export function Navbar() {
               Premium Dogs
             </span>
           </Link>
-
+ 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <Link href="/" className="text-foreground hover:text-primary transition-colors">
