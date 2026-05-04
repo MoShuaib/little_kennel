@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Search } from 'lucide-react'
+import { Search, ArrowLeft, ChevronRight } from 'lucide-react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { DogCard } from '@/components/dog-card'
 import { AnimatedBackground } from '@/components/animated-background'
-import { dogsData, Dog } from '@/lib/dogs-data'
+import { breedsData, Breed, Dog } from '@/lib/dogs-data'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -15,26 +15,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Card, CardContent } from '@/components/ui/card'
 
 export default function DogsPage() {
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedBreed, setSelectedBreed] = useState<string>('all')
+  const [selectedBreedId, setSelectedBreedId] = useState<string>('all')
+  const [view, setView] = useState<'breeds' | 'dogs'>('breeds')
+  const [selectedBreed, setSelectedBreed] = useState<Breed | null>(null)
 
-  // Get unique breeds
-  const breeds = ['all', ...new Set(dogsData.map((dog) => dog.breed))]
+  // Filter breeds based on search
+  const filteredBreeds = useMemo(() => {
+    if (!searchTerm) return breedsData
+    return breedsData.filter((breed) =>
+      breed.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  }, [searchTerm])
 
-  // Filter dogs based on search and breed
+  // Filter dogs based on breed selection
   const filteredDogs = useMemo(() => {
-    return dogsData.filter((dog) => {
-      const matchesSearch =
-        dog.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        dog.breed.toLowerCase().includes(searchTerm.toLowerCase())
+    if (selectedBreedId === 'all') return breedsData.flatMap((b) => b.dogs)
+    const breed = breedsData.find((b) => b.id === selectedBreedId)
+    return breed ? breed.dogs : []
+  }, [selectedBreedId])
 
-      const matchesBreed = selectedBreed === 'all' || dog.breed === selectedBreed
+  const handleBreedClick = (breed: Breed) => {
+    setSelectedBreed(breed)
+    setSelectedBreedId(breed.id)
+    setView('dogs')
+  }
 
-      return matchesSearch && matchesBreed
-    })
-  }, [searchTerm, selectedBreed])
+  const handleBackToBreeds = () => {
+    setView('breeds')
+    setSelectedBreed(null)
+    setSelectedBreedId('all')
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -45,77 +59,126 @@ export default function DogsPage() {
         {/* Page Header */}
         <section className="bg-secondary border-b border-border py-8 sm:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {view === 'dogs' && selectedBreed ? (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleBackToBreeds}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <ArrowLeft size={20} />
+                  <span>Back to Breeds</span>
+                </button>
+              </div>
+            ) : null}
             <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2 animate-fade-in-up">
-              Browse Our Dogs
+              {view === 'dogs' && selectedBreed ? selectedBreed.name : 'Browse Our Dogs'}
             </h1>
             <p className="text-muted-foreground animate-fade-in-up delay-200">
-              Find your perfect companion from our curated collection
+              {view === 'dogs' && selectedBreed
+                ? `${selectedBreed.dogs.length} dogs available`
+                : 'Find your perfect companion from our curated collection'}
             </p>
           </div>
         </section>
 
-        {/* Filters Section */}
+        {/* Search Section */}
         <section className="py-8 border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Search Bar */}
-              <div className="relative">
-                <Search className="absolute  left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-                <Input
-                  placeholder="Search by name or breed..." 
-                  className="pl-10 border-black "
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-
-              {/* Breed Filter */}
-              <Select value={selectedBreed} onValueChange={setSelectedBreed}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter by breed" />
-                </SelectTrigger>
-                <SelectContent>
-                  {breeds.map((breed) => (
-                    <SelectItem key={breed} value={breed}>
-                      {breed === 'all' ? 'All Breeds' : breed}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+              <Input
+                placeholder={view === 'dogs' ? "Search dogs by name..." : "Search breeds..."}
+                className="pl-10 border-black"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
 
             {/* Results Count */}
             <div className="mt-4 text-sm text-muted-foreground">
-              Showing {filteredDogs.length} of {dogsData.length} dogs
+              {view === 'dogs'
+                ? `Showing ${filteredDogs.length} dogs`
+                : `Showing ${filteredBreeds.length} breeds`}
             </div>
           </div>
         </section>
 
+        {/* Breeds Grid */}
+        {view === 'breeds' && (
+          <section className="py-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              {filteredBreeds.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredBreeds.map((breed) => (
+                    <Card
+                      key={breed.id}
+                      className="cursor-pointer hover:shadow-lg transition-shadow overflow-hidden group"
+                      onClick={() => handleBreedClick(breed)}
+                    >
+                      <div className="aspect-video bg-muted relative overflow-hidden">
+                        <img
+                          src={breed.image}
+                          alt={breed.name}
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = '/dogs/dog-1.jpg'
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <span className="text-white font-medium flex items-center gap-1">
+                            View {breed.dogs.length} dogs <ChevronRight size={16} />
+                          </span>
+                        </div>
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="text-xl font-bold text-foreground mb-2">{breed.name}</h3>
+                        <p className="text-muted-foreground text-sm line-clamp-2">{breed.description}</p>
+                        <div className="mt-3 text-sm font-medium text-primary">
+                          {breed.dogs.length} {breed.dogs.length === 1 ? 'dog' : 'dogs'} available
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-lg text-muted-foreground mb-2">No breeds found</p>
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="text-primary hover:text-primary/80 font-medium transition-colors"
+                  >
+                    Clear search
+                  </button>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* Dogs Grid */}
-        <section className="py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {filteredDogs.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredDogs.map((dog) => (
-                  <DogCard key={dog.id} {...dog} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-lg text-muted-foreground mb-2">No dogs found matching your criteria</p>
-                <button
-                  onClick={() => {
-                    setSearchTerm('')
-                    setSelectedBreed('all')
-                  }}
-                  className="text-primary hover:text-primary/80 font-medium transition-colors"
-                >
-                  Clear filters
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
+        {view === 'dogs' && (
+          <section className="py-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              {filteredDogs.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredDogs.map((dog) => (
+                    <DogCard key={dog.id} {...dog} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-lg text-muted-foreground mb-2">No dogs found</p>
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="text-primary hover:text-primary/80 font-medium transition-colors"
+                  >
+                    Clear search
+                  </button>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* CTA Section */}
         <section className="bg-primary text-primary-foreground py-12">

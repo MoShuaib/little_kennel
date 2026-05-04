@@ -11,10 +11,12 @@ export function AnimatedBackground({
   className = '', 
   intensity = 'medium' 
 }: AnimatedBackgroundProps) {
+  const [mounted, setMounted] = useState(false)
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; size: number; delay: number }>>([])
 
   useEffect(() => {
-    // Generate random particles
+    setMounted(true)
+    // Generate random particles only on client
     const newParticles = Array.from({ length: intensity === 'strong' ? 20 : intensity === 'medium' ? 12 : 6 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
@@ -24,6 +26,9 @@ export function AnimatedBackground({
     }))
     setParticles(newParticles)
   }, [intensity])
+
+  // Don't render particles during SSR to prevent hydration mismatch
+  if (!mounted) return null
 
   return (
     <div className={`fixed inset-0 overflow-hidden pointer-events-none ${className}`}>
