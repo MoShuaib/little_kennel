@@ -37,7 +37,7 @@ export default function Home() {
                     <ArrowRight size={20} />
                   </Link>
                   <a
-                    href="tel:+917533998861"
+                    href="tel:+917042602329"
                     className="inline-flex items-center justify-center gap-2 border-2 border-primary text-primary hover:bg-primary/5 px-8 py-3 rounded-lg font-semibold transition-colors"
                   >
                     <Phone size={20} />
@@ -146,14 +146,14 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
               <a
-                href="tel:+917533998861"
+                href="tel:+917042602329"
                 className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 rounded-lg font-semibold transition-colors"
               >
                 <Phone size={20} />
-                Call: +91 7533998861
+                Call: +91 7042602329
               </a>
               <a
-                href="https://wa.me/917533998861"
+                href="https://wa.me/917042602329"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors border border-primary-foreground/30"

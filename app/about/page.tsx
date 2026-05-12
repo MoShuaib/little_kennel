@@ -255,7 +255,7 @@ export default function AboutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center animate-fade-in-up">
-                <div className="inline-block w-16 h-16 bg-accent/20 rounded-full  items-center justify-center mb-4">
+                <div className="flex w-16 h-16 bg-accent/20 rounded-full items-center justify-center mb-4 mx-auto">
                   <Shield className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="font-bold text-foreground mb-2">Verified Health</h3>
@@ -263,7 +263,7 @@ export default function AboutPage() {
               </div>
 
               <div className="text-center animate-fade-in-up">
-                <div className="inline-block w-16 h-16 bg-accent/20 rounded-full  items-center justify-center mb-4">
+                <div className="flex w-16 h-16 bg-accent/20 rounded-full items-center justify-center mb-4 mx-auto">
                   <Heart className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="font-bold text-foreground mb-2">Champion Bloodlines</h3>
@@ -271,7 +271,7 @@ export default function AboutPage() {
               </div>
 
               <div className="text-center animate-fade-in-up">
-                <div className="inline-block w-16 h-16 bg-accent/20 rounded-full  items-center justify-center mb-4">
+                <div className="flex w-16 h-16 bg-accent/20 rounded-full items-center justify-center mb-4 mx-auto">
                   <Users className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="font-bold text-foreground mb-2">Expert Support</h3>
@@ -279,7 +279,7 @@ export default function AboutPage() {
               </div>
 
               <div className="text-center animate-fade-in-up">
-                <div className="inline-block w-16 h-16 bg-accent/20 rounded-full  items-center justify-center mb-4">
+                <div className="flex w-16 h-16 bg-accent/20 rounded-full items-center justify-center mb-4 mx-auto">
                   <Pill className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="font-bold text-foreground mb-2">Complete Care</h3>
